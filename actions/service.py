@@ -3,7 +3,7 @@ from urllib.parse import parse_qsl, parse_qs
 import datetime
 from line_chatbot_api import *
 
-def hiragana_test(event):
+def hiragana_test(event,messages):
     hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
                     ka='か',ki='き',ku='く',ke='け',ko='こ',
                     sa='さ',si='し',su='す',se='せ',so='そ',
@@ -14,12 +14,11 @@ def hiragana_test(event):
                     ya='ya',yu='ゆ',yo='よ',
                     wa='わ',wo='を',n='ん')
     key = random.choice(list(hiragana.keys()))
-    messages=[]
-    messages.append(TextSendMessage(text=f"請寫出{key}"))
+    messages.append(TextSendMessage(text=f"請寫出{key}的平假名"))
     line_bot_api.reply_message(event.reply_token, messages)
+    return hiragana[key] # return the answer
     
-
-def katakana_test(event):
+def katakana_test(event,messages):
     katakana = dict(a='ア',i='イ',u='ウ',e='エ',o='オ',
                     ka='カ',ki='キ',ku='ク',ke='ケ',ko='コ',
                     sa='サ',si='シ',su='ス',se='セ',so='ソ',
@@ -30,7 +29,7 @@ def katakana_test(event):
                     ya='ヤ',yu='ユ',yo='ヨ',
                     wa='ワ',wo='ヲ',n='ン')
     key = random.choice(list(katakana.keys()))
-    messages=[]
-    messages.append(TextSendMessage(text=f"請寫出{key}"))
+    messages.append(TextSendMessage(text=f"請寫出{key}的片假名"))
     line_bot_api.reply_message(event.reply_token, messages)
+    return katakana[key] # return the answer
     

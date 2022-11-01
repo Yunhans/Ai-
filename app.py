@@ -35,16 +35,22 @@ def handle_something(event):
             messages=[]
             messages.append(TextSendMessage(text='歡迎使用AIあイ'))
             messages.append(TextSendMessage(text='以下是使用說明的影片'))
-            messages.append(ImageSendMessage(original_content_url='https://imgur.com/PoQnV4N.png', preview_image_url='https://imgur.com/PoQnV4N.png'))
             line_bot_api.reply_message(event.reply_token, messages)  
         elif '平假名測驗' in recrive_text:
-            hiragana_test(event)
+            messages=[]
+            messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
+            messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
+            hiragana_test(event, messages)
         elif '片假名測驗' in recrive_text:
-            katakana_test(event)
+            messages=[]
+            messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
+            messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
+            katakana_test(event, messages)
         else:
             messages=[]
             messages.append(StickerSendMessage(package_id=789, sticker_id=10882))
-            messages.append(TextSendMessage(text='抱歉我聽不懂你說的意思~\n可以用其他方式再說一次嗎?'))
+            messages.append(TextSendMessage(text='抱歉我聽不懂你說的意思~'))
+            messages.append(TextSendMessage(text='可以用其他方式再說一次嗎?'))
             line_bot_api.reply_message(event.reply_token, messages)
     elif event.message.type=='sticker':
         receive_sticker_id=event.message.sticker_id
@@ -55,6 +61,8 @@ def handle_something(event):
         with open('temp_image.png', 'wb') as fd:
             for chunk in message_content.iter_content():
                 fd.write(chunk)
+    
+        
 
 # run app
 if __name__ == "__main__":
