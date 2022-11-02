@@ -22,7 +22,11 @@ from linebot.models import (
     ImageCarouselTemplate,
     ImageCarouselColumn,
     DatetimePickerAction,
-    ConfirmTemplate
+    ConfirmTemplate,
+    QuickReplyButton,
+    QuickReply,
+    CameraAction,
+    CameraRollAction
 )
 
 line_bot_api = LineBotApi('A9XkVTj33ijJfPrCHMm8594E0hb8IOXSNKO9yLKow+bhFuRuDC2Ewj5C98iWFtnUVKsWieBA5z8pJgOHdiVBJg4bvMjTI+VEr0mBXUFBiIr0rQ9Bvxs7OOpN4Sehj3hAJhZou20zy5o8ow6ZoOL0ogdB04t89/1O/w1cDnyilFU=')

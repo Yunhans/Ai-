@@ -4,17 +4,21 @@ import datetime
 from line_chatbot_api import *
 
 def hiragana_test(event,messages):
-    hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
-                    ka='か',ki='き',ku='く',ke='け',ko='こ',
-                    sa='さ',si='し',su='す',se='せ',so='そ',
-                    ta='た',ti='ち',tu='つ',te='て',to='と',
-                    na='な',ni='に',nu='ぬ',ne='ね',no='の',
-                    ha='は',hi='ひ',hu='ふ',he='へ',ho='ほ',
-                    ma='ま',mi='み',mu='む',me='め',mo='も',
-                    ya='ya',yu='ゆ',yo='よ',
-                    wa='わ',wo='を',n='ん')
+    # hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
+    #                 ka='か',ki='き',ku='く',ke='け',ko='こ',
+    #                 sa='さ',si='し',su='す',se='せ',so='そ',
+    #                 ta='た',ti='ち',tu='つ',te='て',to='と',
+    #                 na='な',ni='に',nu='ぬ',ne='ね',no='の',
+    #                 ha='は',hi='ひ',hu='ふ',he='へ',ho='ほ',
+    #                 ma='ま',mi='み',mu='む',me='め',mo='も',
+    #                 ya='ya',yu='ゆ',yo='よ',
+    #                 wa='わ',wo='を',n='ん')
+    hiragana = dict(a='あ',i='い',u='う',e='え',o='お',ka='か',ki='き',ku='く',ke='け',ko='こ',)
     key = random.choice(list(hiragana.keys()))
-    messages.append(TextSendMessage(text=f"請寫出{key}的平假名"))
+    messages.append(TextSendMessage(text=f"{key}的平假名怎麼寫？",quick_reply=QuickReply(items=[
+                                                                QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
+                                                                QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
+                                                                ])))
     line_bot_api.reply_message(event.reply_token, messages)
     return hiragana[key] # return the answer
     
@@ -29,7 +33,10 @@ def katakana_test(event,messages):
                     ya='ヤ',yu='ユ',yo='ヨ',
                     wa='ワ',wo='ヲ',n='ン')
     key = random.choice(list(katakana.keys()))
-    messages.append(TextSendMessage(text=f"請寫出{key}的片假名"))
+    messages.append(TextSendMessage(text=f"{key}的片假名怎麼寫？",quick_reply=QuickReply(items=[
+                                                                QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
+                                                                QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
+                                                                ])))
     line_bot_api.reply_message(event.reply_token, messages)
     return katakana[key] # return the answer
     
