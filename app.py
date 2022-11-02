@@ -51,11 +51,18 @@ def handle_something(event):
             messages.append(TextSendMessage(text='歡迎使用AIあイ'))
             messages.append(TextSendMessage(text='以下是使用說明的影片'))
             line_bot_api.reply_message(event.reply_token, messages)  
-        elif '平假名測驗' in recrive_text:
+        elif '50音表' in recrive_text:
             messages=[]
-            messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
+            messages.append(ImageSendMessage(original_content_url='https://imgur.com/FRkwLch.png', preview_image_url='https://imgur.com/FRkwLch.png'))
+            line_bot_api.reply_message(event.reply_token, messages)
+        elif '答案卷' in recrive_text:
+            messages=[]
             messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
-            answer=hiragana_test(event, messages)
+            line_bot_api.reply_message(event.reply_token, messages)
+        elif '回饋表單' in recrive_text:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
+        elif '平假名測驗' in recrive_text:
+            answer=hiragana_test(event)
         elif '片假名測驗' in recrive_text:
             # messages=[]
             # messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))

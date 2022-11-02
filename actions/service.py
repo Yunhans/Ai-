@@ -3,7 +3,7 @@ from urllib.parse import parse_qsl, parse_qs
 import datetime
 from line_chatbot_api import *
 
-def hiragana_test(event,messages):
+def hiragana_test(event):
     # hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
     #                 ka='か',ki='き',ku='く',ke='け',ko='こ',
     #                 sa='さ',si='し',su='す',se='せ',so='そ',
@@ -15,6 +15,7 @@ def hiragana_test(event,messages):
     #                 wa='わ',wo='を',n='ん')
     hiragana = dict(a='あ',i='い',u='う',e='え',o='お',ka='か',ki='き',ku='く',ke='け',ko='こ',)
     key = random.choice(list(hiragana.keys()))
+    messages=[]
     messages.append(TextSendMessage(text=f"{key}的平假名怎麼寫？",quick_reply=QuickReply(items=[
                                                                 QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
                                                                 QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
