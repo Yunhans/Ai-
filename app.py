@@ -57,10 +57,11 @@ def handle_something(event):
             messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
             answer=hiragana_test(event, messages)
         elif '片假名測驗' in recrive_text:
-            messages=[]
-            messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
-            messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
-            answer=katakana_test(event, messages)
+            # messages=[]
+            # messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
+            # messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
+            # answer=katakana_test(event, messages)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
         else:
             messages=[]
             messages.append(StickerSendMessage(package_id=789, sticker_id=10882))
