@@ -13,17 +13,19 @@ def hiragana_test(event):
     #                 ma='ま',mi='み',mu='む',me='め',mo='も',
     #                 ya='ya',yu='ゆ',yo='よ',
     #                 wa='わ',wo='を',n='ん')
-    hiragana = dict(a='あ',i='い',u='う',e='え',o='お',ka='か',ki='き',ku='く',ke='け',ko='こ',)
+    hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
+                    ka='か',ki='き',ku='く',ke='け',ko='こ',
+                    sa='さ',si='し',su='す',se='せ',so='そ',)
     key = random.choice(list(hiragana.keys()))
     messages=[]
-    messages.append(TextSendMessage(text=f"{key}的平假名怎麼寫？",quick_reply=QuickReply(items=[
+    messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[
                                                                 QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
                                                                 QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
                                                                 ])))
     line_bot_api.reply_message(event.reply_token, messages)
     return hiragana[key] # return the answer
     
-# def katakana_test(event,messages):
+# def katakana_test(event):
 #     katakana = dict(a='ア',i='イ',u='ウ',e='エ',o='オ',
 #                     ka='カ',ki='キ',ku='ク',ke='ケ',ko='コ',
 #                     sa='サ',si='シ',su='ス',se='セ',so='ソ',
@@ -34,7 +36,8 @@ def hiragana_test(event):
 #                     ya='ヤ',yu='ユ',yo='ヨ',
 #                     wa='ワ',wo='ヲ',n='ン')
 #     key = random.choice(list(katakana.keys()))
-#     messages.append(TextSendMessage(text=f"{key}的片假名怎麼寫？",quick_reply=QuickReply(items=[
+    # messages=[]
+#     messages.append(TextSendMessage(text=f"[{key}]的片假名怎麼寫？",quick_reply=QuickReply(items=[
 #                                                                 QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
 #                                                                 QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
 #                                                                 ])))

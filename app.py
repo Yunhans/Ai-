@@ -48,8 +48,9 @@ def handle_something(event):
         # print(recrive_text)
         if '使用說明' in recrive_text:
             messages=[]
-            messages.append(TextSendMessage(text='歡迎使用AIあイ'))
-            messages.append(TextSendMessage(text='以下是使用說明的影片'))
+            # messages.append(TextSendMessage(text='歡迎使用AIあイ'))
+            # messages.append(TextSendMessage(text='以下是使用說明的影片'))
+            messages.append(TextSendMessage(text='此功能準備中'))
             line_bot_api.reply_message(event.reply_token, messages)  
         elif '50音表' in recrive_text:
             messages=[]
@@ -64,10 +65,7 @@ def handle_something(event):
         elif '平假名測驗' in recrive_text:
             answer=hiragana_test(event)
         elif '片假名測驗' in recrive_text:
-            # messages=[]
-            # messages.append(TextSendMessage(text='下載此答案卷\n請寫在方框內'))
-            # messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
-            # answer=katakana_test(event, messages)
+            # answer=katakana_test(event)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
         else:
             messages=[]
@@ -94,17 +92,36 @@ def handle_something(event):
         data[0] = normalized_image_array
 
         # run the inference
-        prediction_options=('あ', 'い', 'う', 'え', 'お','か','き','く','け','こ')
+        prediction_options=('あ','い','う','え','お',
+                            'か','き','く','け','こ',
+                            'さ','し','す','せ','そ')
         prediction = model.predict(data)
         prediction_int_result = prediction.argmax()
         prediction_string_result = prediction_options[prediction_int_result]
         messages=[]
-        messages.append(TextSendMessage(text=f"你寫的字是：{prediction_string_result}"))
+        messages.append(TextSendMessage(text=f"你寫的字是[{prediction_string_result}]"))
 
         if(answer==prediction_string_result):
             messages.append(TextSendMessage(text='答對了！'))
+            i = random.randint(0,3)
+            j = random.randint(1,5)
+            sticker=[['446','1989','1993','1998','1991','1992'],
+                    ['789','10855','10857','10859','10863','10891'],
+                    ['11537','52002734','52002735','52002736','52002748','52002752'],
+                    ['11539','52114117','52114123','52114125','52114131','52114118']]
+            messages.append(StickerSendMessage(package_id=sticker[i][0],sticker_id=sticker[i][j]))
         else:
-            messages.append(TextSendMessage(text=f"答錯了\n是{answer}才對喔！"))
+            messages.append(TextSendMessage(text='答錯了！'))
+            i = random.randint(0,3)
+            j = random.randint(1,5)
+            sticker=[['11538','51626510','51626497','51626524','51626529','51626531'],
+                    ['11539','52114114','52114127','52114137','52114138','52114141'],
+                    ['789','10860','10879','10881','10885','10887'],
+                    ['11537','52002749','52002750','52002758','52002765','52002770']]
+            messages.append(StickerSendMessage(package_id=sticker[i][0],sticker_id=sticker[i][j]))
+            messages.append(TextSendMessage(text=f"是[{answer}]才對喔"))
+
+            
         
         # 回傳訊息給使用者
         line_bot_api.reply_message(event.reply_token, messages)
