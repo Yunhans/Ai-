@@ -16,7 +16,8 @@ def hiragana_test(event):
     hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
                     ka='か',ki='き',ku='く',ke='け',ko='こ',
                     sa='さ',si='し',su='す',se='せ',so='そ',
-                    ta='た',chi='ち',tsu='つ',te='て',to='と',)
+                    ta='た',chi='ち',tsu='つ',te='て',to='と',
+                    na='な',ni='に',nu='ぬ',ne='ね',no='の',)
     key = random.choice(list(hiragana.keys()))
     messages=[]
     messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[

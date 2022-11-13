@@ -95,7 +95,8 @@ def handle_something(event):
         prediction_options=('あ','い','う','え','お',
                             'か','き','く','け','こ',
                             'さ','し','す','せ','そ',
-                            'た','ち','つ','て','と')
+                            'た','ち','つ','て','と',
+                            'な','に','ぬ','ね','の',)
         prediction = model.predict(data)
         prediction_int_result = prediction.argmax()
         prediction_string_result = prediction_options[prediction_int_result]
