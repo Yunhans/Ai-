@@ -16,7 +16,8 @@ def hiragana_test(event):
                     ka='か',ki='き',ku='く',ke='け',ko='こ',
                     sa='さ',si='し',su='す',se='せ',so='そ',
                     ta='た',chi='ち',tsu='つ',te='て',to='と',
-                    na='な',ni='に',nu='ぬ',ne='ね',no='の',)
+                    na='な',ni='に',nu='ぬ',ne='ね',no='の',
+                    ha='は',hi='ひ',hu='ふ',he='へ',ho='ほ',)
     key = random.choice(list(hiragana.keys()))
     messages=[]
     messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[
@@ -45,4 +46,3 @@ def hiragana_test(event):
 #                                                                 ])))
 #     line_bot_api.reply_message(event.reply_token, messages)
 #     return katakana[key] # return the answer
-    

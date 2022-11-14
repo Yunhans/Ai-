@@ -15,7 +15,7 @@
 
     $(window).on('load', function(){
     canvas.setAttribute('width', $('.container').width());
-    canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
+    canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight()-10);
     signaturePad.clear();
     });
     $('#clear').on('click', function(){
@@ -76,14 +76,12 @@
 {% block content %}
 <div class="container">
   <canvas id="canvas"></canvas>
-  <!-- <button id="clear" type="button" class="btn btn-danger btn-block">清除</button> -->
-  <!-- <button id="btn" type="button" class="btn btn-primary btn-block">送出</button> -->
-  <script src=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js integrity=undefined crossorigin=anonymous></script>
+  <!-- <script src=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js integrity=undefined crossorigin=anonymous></script> -->
   <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css integrity=undefined crossorigin=anonymous>
-  <div class="d-grid gap1">
+  <div class="d-grid gap-2">
     <div id="full" class="d-flex mb-1">
-      <button id="clear"type="button" class="btn btn-danger btn-lg flex-fill me-1">清除</button>
-      <button id="btn" type="button" class="btn btn-primary btn-lg flex-fill me-1">送出</button>
+      <button id="clear" type="button" class="btn btn-outline-danger btn-lg flex-fill me-1 py-3">清除</button>
+      <button id="btn" type="button" class="btn btn-outline-primary btn-lg flex-fill me-1 py-3">送出</button>
     </div>
   </div>
 </div>
