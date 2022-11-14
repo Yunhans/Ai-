@@ -1,0 +1,92 @@
+{% extends "bootstrap/base.html" %}
+
+{%- block metas %}
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{%- endblock metas %}
+<!--Add-->
+{% block scripts %}
+{{super()}}
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  <script>
+    const canvas = document.querySelector('#canvas');
+    const signaturePad = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(238,238,238)',
+    });
+
+    $(window).on('load', function(){
+    canvas.setAttribute('width', $('.container').width());
+    canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight() - 10);
+    signaturePad.clear();
+    });
+    $('#clear').on('click', function(){
+    signaturePad.clear();
+    });
+ </script>
+ <!-- Add -->
+ <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+ <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+ <script>
+   $('#btn').on('click', function() {
+    var liffID = '1657646010-mWYvBkxr';
+    liff.init({
+    liffId: liffID
+    }).then(function() {
+    console.log('LIFF init');
+      $.ajax({
+        type: 'POST',
+        url: '/saveimage',
+        data: {
+          'image': signaturePad.toDataURL('image/jpeg')
+        },
+        success: function (res, status) {
+          liff.getProfile().then(function (profile) {
+            liff.sendMessages([
+              {
+                type: 'image',
+                originalContentUrl: 'https://' + document.domain + '/imgs/' + res + '.png',
+                previewImageUrl: 'https://' + document.domain + '/imgs/' + res + '.png'
+              },
+            ]).then(function () {
+              liff.closeWindow();
+            }).catch(function (error) {
+              window.alert('Error sending message: ' + error.message);
+            });
+          }).catch(function (error) {
+              window.alert("Error getting profile: " + error.message);
+          });
+        },
+        error: function (res) {
+          window.alert('Error saving image: ' + res.status);
+        },
+        complete: function(data) {
+        }
+      });
+    });
+    // 這邊開始寫使用其他功能
+    }).catch(function(error) {
+    console.log(error);
+    });
+
+ </script>
+{% endblock %}
+<!--End Add-->
+{% block title %}寫寫看{% endblock %}
+
+<!--Add-->
+{% block content %}
+<div class="container">
+  <canvas id="canvas"></canvas>
+  <!-- <button id="clear" type="button" class="btn btn-danger btn-block">清除</button> -->
+  <!-- <button id="btn" type="button" class="btn btn-primary btn-block">送出</button> -->
+  <script src=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js integrity=undefined crossorigin=anonymous></script>
+  <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css integrity=undefined crossorigin=anonymous>
+  <div class="d-grid gap1">
+    <div id="full" class="d-flex mb-1">
+      <button id="clear"type="button" class="btn btn-danger btn-lg flex-fill me-1">清除</button>
+      <button id="btn" type="button" class="btn btn-primary btn-lg flex-fill me-1">送出</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+<!--End Add-->

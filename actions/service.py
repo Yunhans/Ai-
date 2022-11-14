@@ -1,6 +1,5 @@
 import random
 from urllib.parse import parse_qsl, parse_qs
-import datetime
 from line_chatbot_api import *
 
 def hiragana_test(event):
@@ -21,8 +20,9 @@ def hiragana_test(event):
     key = random.choice(list(hiragana.keys()))
     messages=[]
     messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[
-                                                                QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
-                                                                QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
+                                                                # QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
+                                                                # QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
+                                                                QuickReplyButton(action=URIAction(label="打開白板寫寫看", uri='https://liff.line.me/1657646010-mWYvBkxr')),
                                                                 ])))
     line_bot_api.reply_message(event.reply_token, messages)
     return hiragana[key] # return the answer

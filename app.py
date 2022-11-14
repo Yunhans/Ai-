@@ -1,5 +1,14 @@
 # import flask related
-from flask import Flask, request, abort, url_for
+from flask import Flask, request, abort, url_for, render_template, make_response
+from PIL import Image, ImageOps
+#new
+from flask_bootstrap import Bootstrap
+import os
+import uuid
+import base64
+import warnings
+warnings.simplefilter('error', Image.DecompressionBombWarning)
+#end new
 from urllib.parse import parse_qsl, parse_qs
 import random
 from linebot.models import events
@@ -7,7 +16,6 @@ from line_chatbot_api import *
 from actions.service import *
 
 from keras.models import load_model
-from PIL import Image, ImageOps
 import numpy as np
 
 # Load the model
@@ -19,7 +27,27 @@ model = load_model('keras_model.h5')
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # create flask server
-app = Flask(__name__)
+app = Flask(__name__, static_folder='imgs')
+bootstrap = Bootstrap(app)
+
+@app.route('/')
+def do_get():
+    return render_template('index.html')
+
+@app.route('/saveimage', methods=['POST'])
+def saveimage():
+    event = request.form.to_dict()
+
+    dir_name = 'imgs'
+    img_name = uuid.uuid4().hex
+
+    # Saving image in the 'imgs' folder temporarily. Should be deleted after a certain period of time
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    with open(os.path.join(dir_name, '{}.png'.format(img_name)), 'wb') as img:
+        img.write(base64.b64decode(event['image'].split(",")[1]))
+
+    return make_response(img_name, 200)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -54,14 +82,10 @@ def handle_something(event):
             line_bot_api.reply_message(event.reply_token, messages)  
         elif '50音表' in recrive_text:
             messages=[]
-            messages.append(ImageSendMessage(original_content_url='https://imgur.com/FRkwLch.png', preview_image_url='https://imgur.com/FRkwLch.png'))
+            messages.append(ImageSendMessage(original_content_url='https://imgur.com/FRkwLch.png', preview_image_url='https://imgur.com/FRkwLchl.png'))
             line_bot_api.reply_message(event.reply_token, messages)
-        elif '答案卷' in recrive_text:
-            messages=[]
-            messages.append(ImageSendMessage(original_content_url='https://imgur.com/0I7lHKR.png', preview_image_url='https://imgur.com/0I7lHKR.png'))
-            line_bot_api.reply_message(event.reply_token, messages)
-        elif '回饋表單' in recrive_text:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
+        elif '假名測驗' in recrive_text:
+            answer=hiragana_test(event)
         elif '平假名測驗' in recrive_text:
             answer=hiragana_test(event)
         elif '片假名測驗' in recrive_text:
@@ -78,13 +102,17 @@ def handle_something(event):
         receive_package_id=event.message.package_id
         line_bot_api.reply_message(event.reply_token, StickerSendMessage(package_id=receive_package_id, sticker_id=receive_sticker_id))
     elif event.message.type=='image':
-        message_content = line_bot_api.get_message_content(event.message.id)
-        with open('temp_image.png', 'wb') as fd:
-            for chunk in message_content.iter_content():
-                fd.write(chunk)
+        if event.message.content_provider.type == 'line':
+            message_content = line_bot_api.get_message_content(event.message.id)  #只能接收使用者傳出的圖片 liff.sendMessages不行
+            with open('temp_image.png', 'wb') as fd:
+                for chunk in message_content.iter_content():
+                    fd.write(chunk)
+            image = Image.open('temp_image.png')
+        elif event.message.content_provider.type == 'external':
+            urlName = event.message.content_provider.original_content_url
+            print(urlName[-36:])
+            image = Image.open('imgs/{}'.format(urlName[-36:]))
 
-        # Replace this with the path to your image
-        image = Image.open('temp_image.png')
         size = (224, 224)
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
@@ -127,7 +155,6 @@ def handle_something(event):
         
         # 回傳訊息給使用者
         line_bot_api.reply_message(event.reply_token, messages)
-
 
 # run app
 if __name__ == "__main__":
