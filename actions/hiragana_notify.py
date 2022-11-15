@@ -36,7 +36,8 @@ def hiragana_notify(event, answer):
                         'さ','し','す','せ','そ',
                         'た','ち','つ','て','と',
                         'な','に','ぬ','ね','の',
-                        'は','ひ','ふ','へ','ほ',)
+                        'は','ひ','ふ','へ','ほ',
+                        'ま','み','む','め','も',)
     prediction = model.predict(data)
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]

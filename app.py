@@ -104,6 +104,10 @@ def handle_something(event):
             hiragana_notify(event, answer)
         elif answer in katakana:
             katakana_notify(event, answer)
+        
+        # 取得圖片樣本
+        # answer=hiragana_test(event)
+
 
 # run app
 if __name__ == "__main__":
