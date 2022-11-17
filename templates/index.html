@@ -10,27 +10,27 @@
   <script>
     const canvas = document.querySelector('#canvas');
     const signaturePad = new SignaturePad(canvas, {
-    backgroundColor: 'rgb(238,238,238)',
+      backgroundColor: 'rgb(238,238,238)',
     });
 
-    $(window).on('load', function(){
-    canvas.setAttribute('width', $('.container').width());
-    canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight()-10);
-    signaturePad.clear();
+    $(window).ready(function(){
+      canvas.setAttribute('width', $('.container').width());
+      canvas.setAttribute('height', window.innerHeight - $('#btn').outerHeight()-10);
+      signaturePad.clear();
     });
-    $('#clear').on('click', function(){
-    signaturePad.clear();
+    $('#clear').click(function(){
+      signaturePad.clear();
     });
  </script>
  <!-- Add -->
  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
  <script>
-  $('#btn').on('click', function() {
+  $('#btn').click(function() {
     $('#btn').removeClass('btn-outline-primary').addClass('btn-success').attr("disabled", true).delay(1000).text('發送中');
     $('#clear').hide()
-    liff.init({
-    liffId: '1657646010-mWYvBkxr'
+      liff.init({
+      liffId: '1657646010-mWYvBkxr'
     }).then(function() {
     console.log('LIFF init');
       $.ajax({
@@ -75,7 +75,7 @@
 <!--Add-->
 {% block content %}
 <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css integrity=undefined crossorigin=anonymous>
-<!-- <script src=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js integrity=undefined crossorigin=anonymous></script> -->
+<script src=https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js integrity=undefined crossorigin=anonymous></script>
 <div class="container">
   <canvas id="canvas"></canvas>
   <div class="d-grid gap-2">

@@ -77,8 +77,8 @@ def handle_something(event):
         elif '假名測驗' in receive_text:
             messages=[]
             messages.append(TextSendMessage(text='想測驗哪一個呢？',quick_reply=QuickReply(items=[
-                                                                QuickReplyButton(action=MessageAction(label="片假名測驗",text="片假名")),
-                                                                QuickReplyButton(action=MessageAction(label="平假名測驗",text="平假名")),
+                                                                QuickReplyButton(action=MessageAction(label="片假名測驗",data='片假名',text="片假名")),
+                                                                QuickReplyButton(action=MessageAction(label="平假名測驗",data='平假名',text="平假名")),                                                                
                                                                 ])))
             line_bot_api.reply_message(event.reply_token, messages)        
         elif '平假名' in receive_text:
@@ -88,18 +88,14 @@ def handle_something(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
         elif '我累了' in receive_text:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='辛苦了！'))
-        elif '收集樣本' in receive_text:
-            answer=collect(event,answer)
+        elif 'admin' in receive_text:
+            admin_menu(event)
         else:
             messages=[]
             messages.append(StickerSendMessage(package_id=789, sticker_id=10882))
             messages.append(TextSendMessage(text='抱歉我聽不懂你說的意思~'))
             messages.append(TextSendMessage(text='可以用其他方式再說一次嗎?'))
             line_bot_api.reply_message(event.reply_token, messages)
-    elif event.message.type=='sticker':
-        receive_sticker_id=event.message.sticker_id
-        receive_package_id=event.message.package_id
-        line_bot_api.reply_message(event.reply_token, StickerSendMessage(package_id=receive_package_id, sticker_id=receive_sticker_id))
     elif event.message.type=='image':
         hiragana = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん']
         katakana = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
@@ -108,8 +104,15 @@ def handle_something(event):
         elif answer in katakana:
             katakana_notify(event, answer)
         elif answer == 'collect':
-            answer=collect(event,answer)
-    
+            answer=collect(event,answer) # 繼續收集樣本
+
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    global answer
+    answer = ''
+    if event.postback.data == '收集樣本':
+        answer=collect(event,answer)
+
 # run app
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5566, debug=True)

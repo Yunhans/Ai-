@@ -1,5 +1,12 @@
 from line_chatbot_api import *
 
+def admin_menu(event):
+    messages=[]
+    messages.append(TextSendMessage(text='管理員功能',quick_reply=QuickReply(items=[
+                                                    QuickReplyButton(action=PostbackAction(label="收集樣本",data='收集樣本')),
+                                                    ])))
+    line_bot_api.reply_message(event.reply_token, messages)
+
 def collect(event,answer):
     messages=[]
     messages.append(TextSendMessage(text='管理員功能：收集樣本',quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label="打開白板寫寫看", uri='https://liff.line.me/1657646010-mWYvBkxr'))])))

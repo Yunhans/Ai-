@@ -14,12 +14,12 @@ data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 def hiragana_notify(event, answer):
     if event.message.content_provider.type == 'line':
-        message_content = line_bot_api.get_message_content(event.message.id)  #只能接收使用者傳出的圖片 liff.sendMessages不行
+        message_content = line_bot_api.get_message_content(event.message.id)  # 只能接收使用者傳出的圖片 liff.sendMessages不行
         with open('temp_image.png', 'wb') as fd:
             for chunk in message_content.iter_content():
                 fd.write(chunk)
         image = Image.open('temp_image.png')
-    elif event.message.content_provider.type == 'external':
+    elif event.message.content_provider.type == 'external': # 圖片由liff.sendMessages送出時
         urlName = event.message.content_provider.original_content_url
         print(urlName[-36:])
         image = Image.open('imgs/{}'.format(urlName[-36:]))
