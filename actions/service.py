@@ -15,7 +15,8 @@ def hiragana_test(event):
                     wa='わ',wo='を',n='ん')
     key = random.choice(list(hiragana.keys()))
     messages=[]
-    messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label="打開白板寫寫看", uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
+    messages.append(AudioSendMessage(original_content_url='https://31fb-2001-b400-e33a-dae0-3569-cc0d-75d6-a1c2.ngrok.io/audio/{}.mp3'.format(key),duration=1000))
+    messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
     return hiragana[key] # return the answer
     
@@ -38,3 +39,19 @@ def hiragana_test(event):
 #                                                                 ])))
 #     line_bot_api.reply_message(event.reply_token, messages)
 #     return katakana[key] # return the answer
+
+def end_test(event):
+    messages=[]
+    i = random.randint(0,7)
+    j = random.randint(1,2)
+    sticker=[['446','2022','2023'],
+            ['789','10876','10890'],
+            ['6325','10979907','10979914'],
+            ['6362','11087923','11087930'],
+            ['8515','16581252','16581259'],
+            ['8525','16581300','16581307'],
+            ['11537','52002757','52002761'],
+            ['11539','52114120','52114121']]
+    messages.append(StickerSendMessage(package_id=sticker[i][0],sticker_id=sticker[i][j]))
+    messages.append(TextSendMessage(text='辛苦了！'))
+    line_bot_api.reply_message(event.reply_token, messages)

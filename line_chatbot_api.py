@@ -12,6 +12,7 @@ from linebot.models import (
     ImageSendMessage, 
     StickerSendMessage, 
     LocationSendMessage,
+    AudioSendMessage,
     TemplateSendMessage,
     ButtonsTemplate,
     PostbackAction,

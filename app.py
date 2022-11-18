@@ -1,5 +1,5 @@
 # import flask related
-from flask import Flask, request, abort, render_template, make_response
+from flask import Flask, request, abort, render_template, make_response, url_for, Response
 from PIL import Image, ImageOps
 #new
 from flask_bootstrap import Bootstrap
@@ -8,6 +8,7 @@ import uuid
 import base64
 import warnings
 warnings.simplefilter('error', Image.DecompressionBombWarning)
+
 #end new
 import random
 from linebot.models import events
@@ -24,10 +25,33 @@ bootstrap = Bootstrap(app)
 def do_get():
     return render_template('index.html')
 
+#Route to stream music
+@app.route('/audio/<string:audio_name>')
+def streammp3(audio_name):
+    print(audio_name.rsplit('.'))
+    def generate():
+        data = return_dict()
+        for item in data:
+            if item['name'] == audio_name.rsplit('.')[0]:
+                song = item['link']
+        with open(song, "rb") as fwav:
+            data = fwav.read(1024)
+            while data:
+                yield data
+                data = fwav.read(1024)
+    return Response(generate(), mimetype="audio/mp3")
+
+def return_dict():
+    #Dictionary to store music file information
+    audio_list=['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n']
+    dict_here=[]
+    for i in range(46):
+        dict_here.append({'name': '{}'.format(audio_list[i]), 'link': 'audio/{}.mp3'.format(audio_list[i])})
+    return dict_here
+
 @app.route('/saveimage', methods=['POST'])
 def saveimage():
     event = request.form.to_dict()
-
     dir_name = 'imgs'
     img_name = uuid.uuid4().hex
 
@@ -36,7 +60,6 @@ def saveimage():
         os.makedirs(dir_name)
     with open(os.path.join(dir_name, '{}.png'.format(img_name)), 'wb') as img:
         img.write(base64.b64decode(event['image'].split(",")[1]))
-
     return make_response(img_name, 200)
 
 @app.route("/callback", methods=['POST'])
@@ -77,8 +100,8 @@ def handle_something(event):
         elif '假名測驗' in receive_text:
             messages=[]
             messages.append(TextSendMessage(text='想測驗哪一個呢？',quick_reply=QuickReply(items=[
-                                                                QuickReplyButton(action=MessageAction(label="片假名測驗",data='片假名',text="片假名")),
-                                                                QuickReplyButton(action=MessageAction(label="平假名測驗",data='平假名',text="平假名")),                                                                
+                                                                QuickReplyButton(action=MessageAction(label='片假名測驗',text='片假名')),
+                                                                QuickReplyButton(action=MessageAction(label='平假名測驗',text='平假名')),                                                                
                                                                 ])))
             line_bot_api.reply_message(event.reply_token, messages)        
         elif '平假名' in receive_text:
@@ -87,7 +110,8 @@ def handle_something(event):
             # answer=katakana_test(event)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
         elif '我累了' in receive_text:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='辛苦了！'))
+            end_test(event)
+            # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='辛苦了！'))
         elif 'admin' in receive_text:
             admin_menu(event)
         else:
