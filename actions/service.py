@@ -2,24 +2,58 @@ import random
 from urllib.parse import parse_qsl, parse_qs
 from line_chatbot_api import *
 
+roma = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n']
+
+
 def hiragana_test(event):
-    hiragana = dict(a='あ',i='い',u='う',e='え',o='お',
-                    ka='か',ki='き',ku='く',ke='け',ko='こ',
-                    sa='さ',shi='し',su='す',se='せ',so='そ',
-                    ta='た',chi='ち',tsu='つ',te='て',to='と',
-                    na='な',ni='に',nu='ぬ',ne='ね',no='の',
-                    ha='は',hi='ひ',fu='ふ',he='へ',ho='ほ',
-                    ma='ま',mi='み',mu='む',me='め',mo='も',
-                    ya='や',yu='ゆ',yo='よ',
-                    ra='ら',ri='り',ru='る',re='れ',ro='ろ',
-                    wa='わ',wo='を',n='ん')
-    key = random.choice(list(hiragana.keys()))
+    hiragana = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん']
+    key = random.randint(0,45)
     messages=[]
-    messages.append(AudioSendMessage(original_content_url='https://31fb-2001-b400-e33a-dae0-3569-cc0d-75d6-a1c2.ngrok.io/audio/{}.mp3'.format(key),duration=1000))
-    messages.append(TextSendMessage(text=f"[{key}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
+    messages.append(AudioSendMessage(original_content_url='https://31fb-2001-b400-e33a-dae0-3569-cc0d-75d6-a1c2.ngrok.io/audio/{}.mp3'.format(roma[key]),duration=1000))
+    messages.append(TextSendMessage(text=f"[{roma[key]}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
-    return hiragana[key] # return the answer
-    
+    return [hiragana[key],key] # return the answer and key
+
+def get_hiragana_rate(hiragana, hiragana0):
+    hiragana_rate=0
+    hiragana_rate_list=[]
+    for i in range(46):
+        if hiragana[i] != 0:
+            hiragana_rate_list.append(hiragana0[i]/hiragana[i])
+        else:
+            hiragana_rate_list.append(0)
+    print(hiragana_rate_list)
+    for i in range(46):
+        if hiragana_rate_list[i]>=0.6:
+            hiragana_rate+=1
+    hiragana_rate=hiragana_rate/46
+    print('hiragana_rate:{:.0%}'.format(hiragana_rate))  
+    return hiragana_rate
+
+def get_hiragana_wrong(hiragana, hiragana0):
+    hiragana_list = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん']
+    hiragana_rate_list=[]
+    hiragana_wrong=''
+    for i in range(46):
+        if hiragana[i] != 0:
+            hiragana_rate_list.append(hiragana0[i]/hiragana[i])
+        else:
+            hiragana_rate_list.append(2)
+    print(hiragana_rate_list)
+    for i in range(3):
+        word_rate = min(hiragana_rate_list)
+        if word_rate < 1:
+            index = hiragana_rate_list.index(word_rate)
+            hiragana_wrong += '' if hiragana_wrong=='' else ' , '
+            hiragana_wrong += hiragana_list[index] 
+            hiragana_rate_list.pop(index)
+            hiragana_list.pop(index)
+    if hiragana_wrong == '':
+        hiragana_wrong = '統計中'
+    print(hiragana_wrong)
+    return hiragana_wrong
+            
+
 # def katakana_test(event):
 #     katakana = dict(a='ア',i='イ',u='ウ',e='エ',o='オ',
 #                     ka='カ',ki='キ',ku='ク',ke='ケ',ko='コ',

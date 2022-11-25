@@ -15,10 +15,11 @@ def collect(event,answer):
     answer='collect'
     return answer
 
-def flex(event):
+
+def flex(event, hiragana_rate, hiragana_wrong):   
     messages=[]
     messages.append(FlexSendMessage(
-    alt_text='hello',
+    alt_text='假名測驗',
     contents=
     {
         "type": "carousel",
@@ -32,10 +33,10 @@ def flex(event):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "假名學習率",
+                    "text": "學習率",
                     "color": "#ffffff",
                     "align": "start",
-                    "size": "md",
+                    "size": "lg",
                     "gravity": "center"
                 },
                 {
@@ -84,8 +85,9 @@ def flex(event):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "最近常錯的字",
+                        "text": "最常錯的字",
                         "color": "#8C8C8C",
+                        "align": "center",
                         "size": "sm",
                         "wrap": True
                     }
@@ -114,12 +116,12 @@ def flex(event):
                     "text": "平假名",
                     "color": "#ffffff",
                     "align": "start",
-                    "size": "md",
+                    "size": "lg",
                     "gravity": "center"
                 },
                 {
                     "type": "text",
-                    "text": "30%",
+                    "text": "{:.0%}".format(hiragana_rate),
                     "color": "#ffffff",
                     "align": "start",
                     "size": "xs",
@@ -138,7 +140,7 @@ def flex(event):
                             "type": "filler"
                         }
                         ],
-                        "width": "30%",
+                        "width": "{:.0%}".format(hiragana_rate),
                         "backgroundColor": "#DE5658",
                         "height": "6px"
                     }
@@ -163,21 +165,14 @@ def flex(event):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "最常錯的字",
+                        "text": "{}".format(hiragana_wrong),
                         "color": "#8C8C8C",
+                        "align": "center",
                         "size": "sm",
                         "wrap": True
                     }
                     ],
                     "flex": 1
-                },
-                {
-                    "type": "button",
-                    "action": {
-                    "type": "message",
-                    "label": "測驗",
-                    "text": "平假名"
-                    }
                 }
                 ],
                 "spacing": "md",
@@ -201,12 +196,12 @@ def flex(event):
                     "text": "片假名",
                     "color": "#ffffff",
                     "align": "start",
-                    "size": "md",
+                    "size": "lg",
                     "gravity": "center"
                 },
                 {
                     "type": "text",
-                    "text": "100%",
+                    "text": "0%",
                     "color": "#ffffff",
                     "align": "start",
                     "size": "xs",
@@ -225,7 +220,7 @@ def flex(event):
                             "type": "filler"
                         }
                         ],
-                        "width": "100%",
+                        "width": "0%",
                         "backgroundColor": "#7D51E4",
                         "height": "6px"
                     }
@@ -250,22 +245,15 @@ def flex(event):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "最常錯的字",
+                        "text": "功能準備中",
                         "color": "#8C8C8C",
+                        "align": "center",
                         "size": "sm",
                         "wrap": True
                     }
                     ],
                     "flex": 1
-                },
-                {
-                    "type": "button",
-                    "action": {
-                    "type": "message",
-                    "label": "測驗",
-                    "text": "片假名"
-                    }
-                }               
+                }       
                 ],
                 "spacing": "md",
                 "paddingAll": "12px"
@@ -279,4 +267,8 @@ def flex(event):
         ]
     }
     ))
+    messages.append(TextSendMessage(text='想測驗什麼呢？',quick_reply=QuickReply(items=[
+                                                    QuickReplyButton(action=MessageAction(label='平假名測驗',text='平假名')),                                                                
+                                                    # QuickReplyButton(action=MessageAction(label='片假名測驗',text='片假名')),
+                                                    ])))
     line_bot_api.reply_message(event.reply_token, messages)

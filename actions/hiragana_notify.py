@@ -13,6 +13,7 @@ model = load_model('keras_model.h5')
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 def hiragana_notify(event, answer):
+    bool = False
     if event.message.content_provider.type == 'line':
         message_content = line_bot_api.get_message_content(event.message.id)  # 只能接收使用者傳出的圖片 liff.sendMessages不行
         with open('temp_image.png', 'wb') as fd:
@@ -31,16 +32,7 @@ def hiragana_notify(event, answer):
     data[0] = normalized_image_array
 
     # run the inference
-    prediction_options=('あ','い','う','え','お',
-                        'か','き','く','け','こ',
-                        'さ','し','す','せ','そ',
-                        'た','ち','つ','て','と',
-                        'な','に','ぬ','ね','の',
-                        'は','ひ','ふ','へ','ほ',
-                        'ま','み','む','め','も',
-                        'や','ゆ','よ',
-                        'ら','り','る','れ','ろ',
-                        'わ','を','ん')
+    prediction_options=('あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん')
     prediction = model.predict(data)
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]
@@ -48,6 +40,7 @@ def hiragana_notify(event, answer):
     messages.append(TextSendMessage(text=f"你寫的字是[{prediction_string_result}]"))
 
     if(answer==prediction_string_result):
+        bool = True
         i = random.randint(0,3)
         j = random.randint(1,5)
         sticker=[['446','1989','1993','1998','1991','1992'],
@@ -73,3 +66,4 @@ def hiragana_notify(event, answer):
                                                                 ])))
     # 回傳訊息給使用者
     line_bot_api.reply_message(event.reply_token, messages)
+    return bool
