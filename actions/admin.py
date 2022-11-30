@@ -1,4 +1,6 @@
 from line_chatbot_api import *
+from actions.service import *
+from actions.access_data import *
 
 def admin_menu(event):
     messages=[]
@@ -8,15 +10,17 @@ def admin_menu(event):
                                                     ])))
     line_bot_api.reply_message(event.reply_token, messages)
 
-def collect(event,answer):
+def collect(event, user_id):
     messages=[]
     messages.append(TextSendMessage(text='管理員功能：收集樣本',quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label="打開白板寫寫看", uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
-    answer='collect'
-    return answer
+    update_answer(user_id, 'collect')
 
-
-def flex(event, hiragana_rate, hiragana_wrong):   
+def flex(event, user_id):
+    hiragana=read_hiragana(user_id)
+    hiragana0=read_hiragana0(user_id)
+    hiragana_rate=get_hiragana_rate(hiragana, hiragana0)
+    hiragana_wrong=get_hiragana_wrong(hiragana, hiragana0)
     messages=[]
     messages.append(FlexSendMessage(
     alt_text='假名測驗',

@@ -3,6 +3,7 @@ from keras.models import load_model
 import numpy as np
 import random
 from PIL import Image, ImageOps
+from actions.access_data import *
 
 # Load the model
 model = load_model('keras_model.h5')
@@ -12,8 +13,8 @@ model = load_model('keras_model.h5')
 # determined by the first position in the shape tuple, in this case 1.
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-def hiragana_notify(event, answer):
-    bool = False
+def hiragana_notify(event, answer, user_id):
+    key=read_key(user_id)
     if event.message.content_provider.type == 'line':
         message_content = line_bot_api.get_message_content(event.message.id)  # 只能接收使用者傳出的圖片 liff.sendMessages不行
         with open('temp_image.png', 'wb') as fd:
@@ -23,7 +24,7 @@ def hiragana_notify(event, answer):
     elif event.message.content_provider.type == 'external': # 圖片由liff.sendMessages送出時
         urlName = event.message.content_provider.original_content_url
         print(urlName[-36:])
-        image = Image.open('imgs/{}'.format(urlName[-36:]))
+        image = Image.open('static/imgs/{}'.format(urlName[-36:]))
 
     size = (224, 224)
     image = ImageOps.fit(image, size, Image.ANTIALIAS)
@@ -39,8 +40,13 @@ def hiragana_notify(event, answer):
     messages=[]
     messages.append(TextSendMessage(text=f"你寫的字是[{prediction_string_result}]"))
 
+    # 答題數+1
+    list=read_hiragana(user_id)
+    list[key]+=1
+    print(list)
+    update_hiragana(user_id,list)
+
     if(answer==prediction_string_result):
-        bool = True
         i = random.randint(0,3)
         j = random.randint(1,5)
         sticker=[['446','1989','1993','1998','1991','1992'],
@@ -52,6 +58,12 @@ def hiragana_notify(event, answer):
                                                                 QuickReplyButton(action=MessageAction(label="結束測驗",text="我累了")),
                                                                 QuickReplyButton(action=MessageAction(label="繼續下一題",text="平假名")),
                                                                 ])))
+        # 答對題數+1
+        list0=read_hiragana0(user_id)
+        list0[key]+=1
+        print(list0)
+        update_hiragana0(user_id,list0)
+
     else:
         i = random.randint(0,3)
         j = random.randint(1,5)
@@ -66,4 +78,3 @@ def hiragana_notify(event, answer):
                                                                 ])))
     # 回傳訊息給使用者
     line_bot_api.reply_message(event.reply_token, messages)
-    return bool

@@ -1,18 +1,20 @@
 import random
 from urllib.parse import parse_qsl, parse_qs
 from line_chatbot_api import *
+from flask import url_for
+from actions.access_data import *
 
 roma = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n']
 
-
-def hiragana_test(event):
+def hiragana_test(event, user_id):
     hiragana = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん']
     key = random.randint(0,45)
     messages=[]
-    messages.append(AudioSendMessage(original_content_url='https://31fb-2001-b400-e33a-dae0-3569-cc0d-75d6-a1c2.ngrok.io/audio/{}.mp3'.format(roma[key]),duration=1000))
+    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True).replace('http', 'https'),duration=1000))
     messages.append(TextSendMessage(text=f"[{roma[key]}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
-    return [hiragana[key],key] # return the answer and key
+    update_answer(user_id, hiragana[key])
+    update_key(user_id,key)
 
 def get_hiragana_rate(hiragana, hiragana0):
     hiragana_rate=0
@@ -55,18 +57,10 @@ def get_hiragana_wrong(hiragana, hiragana0):
             
 
 # def katakana_test(event):
-#     katakana = dict(a='ア',i='イ',u='ウ',e='エ',o='オ',
-#                     ka='カ',ki='キ',ku='ク',ke='ケ',ko='コ',
-#                     sa='サ',shi='シ',su='ス',se='セ',so='ソ',
-#                     ta='タ',chi='チ',tsu='ツ',te='テ',to='ト',
-#                     na='ナ',ni='ニ',nu='ヌ',ne='ネ',no='ノ',
-#                     ha='ハ',hi='ヒ',fu='フ',he='ヘ',ho='ホ',
-#                     ma='マ',mi='ミ',mu='ム',me='メ',mo='モ',
-#                     ya='ヤ',yu='ユ',yo='ヨ',
-#                     ra='ラ',ri='リ',ru='ル',re='レ',ro='ロ',
-#                     wa='ワ',wo='ヲ',n='ン')
+#     katakana = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
+
 #     key = random.choice(list(katakana.keys()))
-    # messages=[]
+#     messages=[]
 #     messages.append(TextSendMessage(text=f"[{key}]的片假名怎麼寫？",quick_reply=QuickReply(items=[
 #                                                                 QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
 #                                                                 QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
