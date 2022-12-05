@@ -16,6 +16,8 @@ from actions.service import *
 from actions.hiragana_notify import *
 from actions.admin import *
 from actions.access_data import *
+# speechRecognition
+import speech_recognition as sr
 
 # create flask server
 app = Flask(__name__)
@@ -54,6 +56,22 @@ def callback():
         print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
     return 'OK'
+
+def transcribe(wav_path):
+    '''
+    Speech to Text by Google free API
+    language: en-US, zh-TW, ja-JP
+    '''
+    r = sr.Recognizer()
+    with sr.AudioFile(wav_path) as source:
+        audio = r.record(source)
+    try:
+        return r.recognize_google(audio, language="ja-JP")
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    return None
 
 # answer = ''
 @handler.add(MessageEvent)
@@ -101,6 +119,22 @@ def handle_something(event):
             katakana_notify(event, answer)
         elif answer == 'collect':
             collect(event, user_id) # 繼續收集樣本
+    elif event.message.type=='audio':
+        filename_wav=f'static/user_voice/{user_id}.wav'
+        filename_mp3=f'static/user_voice/{user_id}.mp3'
+        message_content = line_bot_api.get_message_content(event.message.id)
+        with open(filename_mp3, 'wb') as fd:
+            for chunk in message_content.iter_content():
+                fd.write(chunk)
+        # convert mp3 to wav                  
+        os.system(f'ffmpeg -y -i {filename_mp3} {filename_wav} -loglevel quiet')
+        text = transcribe(filename_wav)
+        print(text)
+        messages=[]
+        messages.append(TextSendMessage(text=text))
+        line_bot_api.reply_message(event.reply_token, messages)
+
+
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
