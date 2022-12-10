@@ -14,6 +14,7 @@ from linebot.models import events
 from line_chatbot_api import *
 from actions.service import *
 from actions.hiragana_notify import *
+from actions.katakana_notify import *
 from actions.admin import *
 from actions.access_data import *
 # speechRecognition
@@ -97,8 +98,8 @@ def handle_something(event):
         elif '平假名' in receive_text:
             hiragana_test(event, user_id)
         elif '片假名' in receive_text:
-            # answer=katakana_test(event)
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
+            katakana_test(event, user_id)
+            # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='此功能準備中'))
         elif '我累了' in receive_text:
             end_test(event)
         elif 'Admin' in receive_text:
@@ -116,7 +117,7 @@ def handle_something(event):
         if answer in hiragana:
             hiragana_notify(event, answer, user_id)
         elif answer in katakana:
-            katakana_notify(event, answer)
+            katakana_notify(event, answer, user_id)
         elif answer == 'collect':
             collect(event, user_id) # 繼續收集樣本
     elif event.message.type=='audio':

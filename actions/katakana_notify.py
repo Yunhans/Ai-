@@ -7,14 +7,14 @@ from actions.access_data import *
 import shutil
 
 # Load the model
-model = load_model('model/hiragana.h5')
+model = load_model('model/katakana.h5')
 
 # Create the array of the right shape to feed into the keras model
 # The 'length' or number of images you can put into the array is
 # determined by the first position in the shape tuple, in this case 1.
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-def hiragana_notify(event, answer, user_id):
+def katakana_notify(event, answer, user_id):
     key=read_key(user_id)
     if event.message.content_provider.type == 'line':
         message_content = line_bot_api.get_message_content(event.message.id)  # 只能接收使用者傳出的圖片 liff.sendMessages不行
@@ -33,7 +33,7 @@ def hiragana_notify(event, answer, user_id):
     data[0] = normalized_image_array
 
     # run the inference
-    prediction_options=('あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん')
+    prediction_options=('ア','イ','ウ','エ','オ',)
     prediction = model.predict(data)
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]
@@ -41,10 +41,10 @@ def hiragana_notify(event, answer, user_id):
     messages.append(TextSendMessage(text=f"你寫的字是[{prediction_string_result}]"))
 
     # 答題數+1
-    list=read_hiragana(user_id)
-    list[key]+=1
-    print(list)
-    update_hiragana(user_id,list)
+    # list=read_hiragana(user_id)
+    # list[key]+=1
+    # print(list)
+    # update_hiragana(user_id,list)
 
     if(answer==prediction_string_result):
         i = random.randint(0,3)
@@ -56,13 +56,13 @@ def hiragana_notify(event, answer, user_id):
         messages.append(StickerSendMessage(package_id=sticker[i][0],sticker_id=sticker[i][j]))
         messages.append(TextSendMessage(text='答對了！',quick_reply=QuickReply(items=[
                                                                 QuickReplyButton(action=MessageAction(label="結束測驗",text="我累了")),
-                                                                QuickReplyButton(action=MessageAction(label="繼續下一題",text="平假名")),
+                                                                QuickReplyButton(action=MessageAction(label="繼續下一題",text="片假名")),
                                                                 ])))
         # 答對題數+1
-        list0=read_hiragana0(user_id)
-        list0[key]+=1
-        print(list0)
-        update_hiragana0(user_id,list0)
+        # list0=read_hiragana0(user_id)
+        # list0[key]+=1
+        # print(list0)
+        # update_hiragana0(user_id,list0)
 
     else:
         i = random.randint(0,3)
@@ -74,10 +74,10 @@ def hiragana_notify(event, answer, user_id):
         messages.append(StickerSendMessage(package_id=sticker[i][0],sticker_id=sticker[i][j]))
         messages.append(TextSendMessage(text=f"答錯了！是[{answer}]才對喔",quick_reply=QuickReply(items=[
                                                                 QuickReplyButton(action=MessageAction(label="結束測驗",text="我累了")),
-                                                                QuickReplyButton(action=MessageAction(label="繼續下一題",text="平假名")),
+                                                                QuickReplyButton(action=MessageAction(label="繼續下一題",text="片假名")),
                                                                 ])))
-    
-    shutil.move(f'static/imgs/{imgName}', f'class_imgs/hiragana/{prediction_string_result}/{imgName}')
+
+    shutil.move(f'static/imgs/{imgName}', f'class_imgs/katakana/{prediction_string_result}/{imgName}')
 
     # 回傳訊息給使用者
     line_bot_api.reply_message(event.reply_token, messages)

@@ -56,17 +56,16 @@ def get_hiragana_wrong(hiragana, hiragana0):
     return hiragana_wrong
             
 
-# def katakana_test(event):
-#     katakana = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
-
-#     key = random.choice(list(katakana.keys()))
-#     messages=[]
-#     messages.append(TextSendMessage(text=f"[{key}]的片假名怎麼寫？",quick_reply=QuickReply(items=[
-#                                                                 QuickReplyButton(action=CameraAction(label="開啟相機辨識")),
-#                                                                 QuickReplyButton(action=CameraRollAction(label="相機膠卷")),
-#                                                                 ])))
-#     line_bot_api.reply_message(event.reply_token, messages)
-#     return katakana[key] # return the answer
+def katakana_test(event, user_id):
+    katakana = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
+    # key = random.randint(0,45)
+    key = random.randint(0,4)
+    messages=[]
+    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True).replace('http', 'https'),duration=1000))
+    messages.append(TextSendMessage(text=f"[{roma[key]}]的片假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
+    line_bot_api.reply_message(event.reply_token, messages)
+    update_answer(user_id, katakana[key])
+    update_key(user_id,key)
 
 def end_test(event):
     messages=[]

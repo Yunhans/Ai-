@@ -37,7 +37,7 @@ def flex(event, user_id):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "學習率",
+                    "text": "分類",
                     "color": "#ffffff",
                     "align": "start",
                     "size": "lg",
@@ -45,7 +45,7 @@ def flex(event, user_id):
                 },
                 {
                     "type": "text",
-                    "text": "70%",
+                    "text": "學習率(%)",
                     "color": "#ffffff",
                     "align": "start",
                     "size": "xs",
@@ -64,7 +64,7 @@ def flex(event, user_id):
                             "type": "filler"
                         }
                         ],
-                        "width": "70%",
+                        "width": "35%",
                         "backgroundColor": "#0D8186",
                         "height": "6px"
                     }
@@ -273,6 +273,6 @@ def flex(event, user_id):
     ))
     messages.append(TextSendMessage(text='想測驗什麼呢？',quick_reply=QuickReply(items=[
                                                     QuickReplyButton(action=MessageAction(label='平假名測驗',text='平假名')),                                                                
-                                                    # QuickReplyButton(action=MessageAction(label='片假名測驗',text='片假名')),
+                                                    QuickReplyButton(action=MessageAction(label='片假名測驗',text='片假名')),
                                                     ])))
     line_bot_api.reply_message(event.reply_token, messages)
