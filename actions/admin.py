@@ -21,6 +21,12 @@ def flex(event, user_id):
     hiragana0=read_hiragana0(user_id)
     hiragana_rate=get_hiragana_rate(hiragana, hiragana0)
     hiragana_wrong=get_hiragana_wrong(hiragana, hiragana0)
+
+    katakana=read_katakana(user_id)
+    katakana0=read_katakana0(user_id)
+    katakana_rate=get_katakana_rate(katakana, katakana0)
+    katakana_wrong=get_katakana_wrong(katakana, katakana0)
+
     messages=[]
     messages.append(FlexSendMessage(
     alt_text='假名測驗',
@@ -205,7 +211,7 @@ def flex(event, user_id):
                 },
                 {
                     "type": "text",
-                    "text": "0%",
+                    "text": "{:.0%}".format(katakana_rate),
                     "color": "#ffffff",
                     "align": "start",
                     "size": "xs",
@@ -224,7 +230,7 @@ def flex(event, user_id):
                             "type": "filler"
                         }
                         ],
-                        "width": "0%",
+                        "width": "{:.0%}".format(katakana_rate),
                         "backgroundColor": "#7D51E4",
                         "height": "6px"
                     }
@@ -249,7 +255,7 @@ def flex(event, user_id):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "功能準備中",
+                        "text": f"{katakana_wrong}",
                         "color": "#8C8C8C",
                         "align": "center",
                         "size": "sm",

@@ -35,6 +35,11 @@ def hiragana_notify(event, answer, user_id):
     # run the inference
     prediction_options=('あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん')
     prediction = model.predict(data)
+
+    # Calculate the confidence of the model's predictions
+    confidence = np.max(prediction)
+    print('confidence score: '+str(confidence))
+
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]
     messages=[]
@@ -77,6 +82,7 @@ def hiragana_notify(event, answer, user_id):
                                                                 QuickReplyButton(action=MessageAction(label="繼續下一題",text="平假名")),
                                                                 ])))
     
+    # move staitc/imgs to class_imgs
     shutil.move(f'static/imgs/{imgName}', f'class_imgs/hiragana/{prediction_string_result}/{imgName}')
 
     # 回傳訊息給使用者

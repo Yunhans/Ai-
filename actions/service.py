@@ -55,7 +55,6 @@ def get_hiragana_wrong(hiragana, hiragana0):
     print(hiragana_wrong)
     return hiragana_wrong
             
-
 def katakana_test(event, user_id):
     katakana = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
     # key = random.randint(0,45)
@@ -66,6 +65,45 @@ def katakana_test(event, user_id):
     line_bot_api.reply_message(event.reply_token, messages)
     update_answer(user_id, katakana[key])
     update_key(user_id,key)
+
+def get_katakana_rate(katakana, katakana0):
+    katakana_rate=0
+    katakana_rate_list=[]
+    for i in range(46):
+        if katakana[i] != 0:
+            katakana_rate_list.append(katakana0[i]/katakana[i])
+        else:
+            katakana_rate_list.append(0)
+    print(katakana_rate_list)
+    for i in range(46):
+        if katakana_rate_list[i]>=0.6:
+            katakana_rate+=1
+    katakana_rate=katakana_rate/46
+    print('katakana_rate:{:.0%}'.format(katakana_rate))  
+    return katakana_rate
+
+def get_katakana_wrong(katakana, katakana0):
+    katakana_list = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン']
+    katakana_rate_list=[]
+    katakana_wrong=''
+    for i in range(46):
+        if katakana[i] != 0:
+            katakana_rate_list.append(katakana0[i]/katakana[i])
+        else:
+            katakana_rate_list.append(2)
+    print(katakana_rate_list)
+    for i in range(3):
+        word_rate = min(katakana_rate_list)
+        if word_rate < 1:
+            index = katakana_rate_list.index(word_rate)
+            katakana_wrong += '' if katakana_wrong=='' else ' , '
+            katakana_wrong += katakana_list[index] 
+            katakana_rate_list.pop(index)
+            katakana_list.pop(index)
+    if katakana_wrong == '':
+        katakana_wrong = '統計中'
+    print(katakana_wrong)
+    return katakana_wrong
 
 def end_test(event):
     messages=[]

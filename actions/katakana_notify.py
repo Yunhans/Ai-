@@ -33,18 +33,23 @@ def katakana_notify(event, answer, user_id):
     data[0] = normalized_image_array
 
     # run the inference
-    prediction_options=('ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ',)
+    prediction_options=('ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン')
     prediction = model.predict(data)
+
+    # Calculate the confidence of the model's predictions
+    confidence = np.max(prediction)
+    print('confidence score: '+str(confidence))
+
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]
     messages=[]
     messages.append(TextSendMessage(text=f"你寫的字是[{prediction_string_result}]"))
 
     # 答題數+1
-    # list=read_hiragana(user_id)
-    # list[key]+=1
-    # print(list)
-    # update_hiragana(user_id,list)
+    list=read_katakana(user_id)
+    list[key]+=1
+    print(list)
+    update_katakana(user_id,list)
 
     if(answer==prediction_string_result):
         i = random.randint(0,3)
@@ -59,10 +64,10 @@ def katakana_notify(event, answer, user_id):
                                                                 QuickReplyButton(action=MessageAction(label="繼續下一題",text="片假名")),
                                                                 ])))
         # 答對題數+1
-        # list0=read_hiragana0(user_id)
-        # list0[key]+=1
-        # print(list0)
-        # update_hiragana0(user_id,list0)
+        list0=read_katakana0(user_id)
+        list0[key]+=1
+        print(list0)
+        update_katakana0(user_id,list0)
 
     else:
         i = random.randint(0,3)
@@ -77,6 +82,7 @@ def katakana_notify(event, answer, user_id):
                                                                 QuickReplyButton(action=MessageAction(label="繼續下一題",text="片假名")),
                                                                 ])))
 
+    # move staitc/imgs to class_imgs
     shutil.move(f'static/imgs/{imgName}', f'class_imgs/katakana/{prediction_string_result}/{imgName}')
 
     # 回傳訊息給使用者
