@@ -64,7 +64,7 @@ def flex(event, user_id):
                             "type": "filler"
                         }
                         ],
-                        "width": "35%",
+                        "width": "40%",
                         "backgroundColor": "#0D8186",
                         "height": "6px"
                     }
@@ -169,7 +169,7 @@ def flex(event, user_id):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "{}".format(hiragana_wrong),
+                        "text": f"{hiragana_wrong}",
                         "color": "#8C8C8C",
                         "align": "center",
                         "size": "sm",

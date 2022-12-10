@@ -33,7 +33,7 @@ def katakana_notify(event, answer, user_id):
     data[0] = normalized_image_array
 
     # run the inference
-    prediction_options=('ア','イ','ウ','エ','オ',)
+    prediction_options=('ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ',)
     prediction = model.predict(data)
     prediction_int_result = prediction.argmax()
     prediction_string_result = prediction_options[prediction_int_result]
