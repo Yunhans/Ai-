@@ -7,7 +7,7 @@ from actions.access_data import *
 import shutil
 
 # Load the model
-model = load_model('model/hiragana.h5')
+sound_model = load_model('model/hiragana.h5')
 
 # Create the array of the right shape to feed into the keras model
 # The 'length' or number of images you can put into the array is
@@ -34,7 +34,7 @@ def hiragana_notify(event, answer, user_id):
 
     # run the inference
     prediction_options=('あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん')
-    prediction = model.predict(data)
+    prediction = sound_model.predict(data)
 
     # Calculate the confidence of the model's predictions
     confidence = np.max(prediction)

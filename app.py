@@ -59,20 +59,10 @@ def callback():
     return 'OK'
 
 def transcribe(wav_path):
-    '''
-    Speech to Text by Google free API
-    language: en-US, zh-TW, ja-JP
-    '''
     r = sr.Recognizer()
     with sr.AudioFile(wav_path) as source:
         audio = r.record(source)
-    try:
-        return r.recognize_google(audio, language="ja-JP")
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    return None
+    return r.recognize_whisper(audio, model="base", language="japanese")
 
 # answer = ''
 @handler.add(MessageEvent)
@@ -127,6 +117,7 @@ def handle_something(event):
         with open(filename_mp3, 'wb') as fd:
             for chunk in message_content.iter_content():
                 fd.write(chunk)
+        fd.close()
         # convert mp3 to wav                  
         os.system(f'ffmpeg -y -i {filename_mp3} {filename_wav} -loglevel quiet')
         text = transcribe(filename_wav)
