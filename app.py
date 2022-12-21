@@ -59,10 +59,21 @@ def callback():
     return 'OK'
 
 def transcribe(wav_path):
+    '''
+    Speech to Text by Google free API
+    language: en-US, zh-TW, jp-JP
+    '''
+    
     r = sr.Recognizer()
     with sr.AudioFile(wav_path) as source:
         audio = r.record(source)
-    return r.recognize_whisper(audio, model="base", language="japanese")
+    try:
+        return r.recognize_google(audio, language="jp-JP")
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    return None
 
 # answer = ''
 @handler.add(MessageEvent)
@@ -112,19 +123,23 @@ def handle_something(event):
             collect(event, user_id) # 繼續收集樣本
     elif event.message.type=='audio':
         filename_wav=f'static/user_voice/{user_id}.wav'
-        filename_mp3=f'static/user_voice/{user_id}.mp3'
+        filename_aac=f'static/user_voice/{user_id}.aac'
+        # filename_mp3=f'static/user_voice/{user_id}.mp3'
         message_content = line_bot_api.get_message_content(event.message.id)
-        with open(filename_mp3, 'wb') as fd:
+        with open(filename_aac, 'wb') as fd:
             for chunk in message_content.iter_content():
                 fd.write(chunk)
         fd.close()
         # convert mp3 to wav                  
-        os.system(f'ffmpeg -y -i {filename_mp3} {filename_wav} -loglevel quiet')
-        text = transcribe(filename_wav)
-        print(text)
-        messages=[]
-        messages.append(TextSendMessage(text=text))
-        line_bot_api.reply_message(event.reply_token, messages)
+        os.system(f'ffmpeg -y -i {filename_aac} {filename_wav} -loglevel quiet')
+        # shutil.move(filename_wav, f'class_imgs/hiragana/{prediction_string_result}/{imgName}')
+        os.rename(filename_wav,f'static/user_voice/{uuid.uuid4().hex}.wav')
+
+        # text = transcribe(filename_wav)
+        # print(text)
+        # messages=[]
+        # messages.append(TextSendMessage(text=text))
+        # line_bot_api.reply_message(event.reply_token, messages)
 
 
 

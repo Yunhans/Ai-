@@ -7,7 +7,7 @@ from actions.access_data import *
 import shutil
 
 # Load the model
-sound_model = load_model('model/katakana.h5')
+katakana_model = load_model('model/katakana.h5')
 
 # Create the array of the right shape to feed into the keras model
 # The 'length' or number of images you can put into the array is
@@ -34,7 +34,7 @@ def katakana_notify(event, answer, user_id):
 
     # run the inference
     prediction_options=('ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン')
-    prediction = sound_model.predict(data)
+    prediction = katakana_model.predict(data)
 
     # Calculate the confidence of the model's predictions
     confidence = np.max(prediction)
