@@ -10,7 +10,8 @@ def hiragana_test(event, user_id):
     hiragana = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん']
     key = random.randint(0,45)
     messages=[]
-    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True).replace('http', 'https'),duration=1000))
+    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True),duration=1000))
+    # messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True).replace('http', 'https'),duration=1000))
     messages.append(TextSendMessage(text=f"[{roma[key]}]的平假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
     update_answer(user_id, hiragana[key])
@@ -60,7 +61,7 @@ def katakana_test(event, user_id):
     # key = random.randint(0,45)
     key = random.randint(0,34)
     messages=[]
-    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True).replace('http', 'https'),duration=1000))
+    messages.append(AudioSendMessage(original_content_url=url_for('static', filename=f"audio/{roma[key]}.mp3", _external=True),duration=1000))
     messages.append(TextSendMessage(text=f"[{roma[key]}]的片假名怎麼寫？",quick_reply=QuickReply(items=[QuickReplyButton(action=URIAction(label='打開白板寫寫看', uri='https://liff.line.me/1657646010-mWYvBkxr'))])))
     line_bot_api.reply_message(event.reply_token, messages)
     update_answer(user_id, katakana[key])
