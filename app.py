@@ -17,8 +17,6 @@ from actions.hiragana_notify import *
 from actions.katakana_notify import *
 from actions.admin import *
 from actions.access_data import *
-# speechRecognition
-import speech_recognition as sr
 
 # create flask server
 app = Flask(__name__)
@@ -58,22 +56,6 @@ def callback():
         abort(400)
     return 'OK'
 
-def transcribe(wav_path):
-    '''
-    Speech to Text by Google free API
-    language: en-US, zh-TW, jp-JP
-    '''
-    
-    r = sr.Recognizer()
-    with sr.AudioFile(wav_path) as source:
-        audio = r.record(source)
-    try:
-        return r.recognize_google(audio, language="jp-JP")
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    return None
 
 # answer = ''
 @handler.add(MessageEvent)
@@ -135,7 +117,7 @@ def handle_something(event):
         # shutil.move(filename_wav, f'class_imgs/hiragana/{prediction_string_result}/{imgName}')
         os.rename(filename_wav,f'static/user_voice/{uuid.uuid4().hex}.wav')
 
-        # text = transcribe(filename_wav)
+        # text = predict(filename_wav)
         # print(text)
         # messages=[]
         # messages.append(TextSendMessage(text=text))
