@@ -14,7 +14,7 @@ def admin_menu(event):
     messages.append(TextSendMessage(text='管理員功能',quick_reply=QuickReply(items=[
                                                     QuickReplyButton(action=PostbackAction(label="收集樣本",data='收集樣本')),
                                                     QuickReplyButton(action=PostbackAction(label="flex",data='flex')),
-                                                    QuickReplyButton(action=URIAction(label="mic",uri='https://line.me/R/nv/mic/')),
+                                                    QuickReplyButton(action=URIAction(label="audio",uri='https://line.me/R/nv/audio/')),
                                                     ])))
     line_bot_api.reply_message(event.reply_token, messages)
 
