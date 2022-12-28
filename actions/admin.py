@@ -3,7 +3,7 @@ from actions.service import *
 from actions.access_data import *
 import os
 import uuid
-from actions.preprocess import *
+# from actions.preprocess import *
 from keras.models import load_model
 
 # model = load_model('model/ASR.h5')
