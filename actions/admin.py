@@ -6,7 +6,7 @@ import uuid
 from actions.preprocess import *
 from keras.models import load_model
 
-model = load_model('model/ASR.h5')
+# model = load_model('model/ASR.h5')
 
 
 def admin_menu(event):
@@ -24,34 +24,34 @@ def collect(event, user_id):
     line_bot_api.reply_message(event.reply_token, messages)
     update_answer(user_id, 'collect')
 
-def audio_notify(event, user_id):
-    filename_wav=f'static/user_voice_wav/{user_id}.wav'
-    filename_aac=f'static/user_voice_aac/{user_id}.aac'
-    message_content = line_bot_api.get_message_content(event.message.id)
-    with open(filename_aac, 'wb') as fd:
-        for chunk in message_content.iter_content():
-            fd.write(chunk)
-    fd.close()
-    # convert mp3 to wav                  
-    os.system(f'ffmpeg -y -i {filename_aac} {filename_wav} -loglevel quiet')
-    wave, sr = librosa.load(filename_wav, mono=True, sr=None)
-    duration = librosa.get_duration(y=wave, sr=sr)
-    print('duration=',duration)
-    if(duration < 3):
-        # 正規化並判斷音檔
-        mfcc = wav2mfcc(filename_wav)
-        mfcc_reshaped = mfcc.reshape(1, 20, 11, 1)
-        print("labels=", get_labels()[0])
-        key = np.argmax(model.predict(mfcc_reshaped))
-        print("predict=", get_labels()[0][key])
-        os.rename(filename_wav,f'static/user_voice_wav/{uuid.uuid4().hex}.wav')
-        messages=[]
-        messages.append(TextSendMessage(text=f'你說的字是[{get_labels()[0][key]}]'))
-    else:
-        os.remove(filename_wav)
-        messages=[]
-        messages.append(TextSendMessage(text='音檔過長(超過2秒)'))
-    line_bot_api.reply_message(event.reply_token, messages)
+# def audio_notify(event, user_id):
+#     filename_wav=f'static/user_voice_wav/{user_id}.wav'
+#     filename_aac=f'static/user_voice_aac/{user_id}.aac'
+#     message_content = line_bot_api.get_message_content(event.message.id)
+#     with open(filename_aac, 'wb') as fd:
+#         for chunk in message_content.iter_content():
+#             fd.write(chunk)
+#     fd.close()
+#     # convert mp3 to wav                  
+#     os.system(f'ffmpeg -y -i {filename_aac} {filename_wav} -loglevel quiet')
+#     wave, sr = librosa.load(filename_wav, mono=True, sr=None)
+#     duration = librosa.get_duration(y=wave, sr=sr)
+#     print('duration=',duration)
+#     if(duration < 3):
+#         # 正規化並判斷音檔
+#         mfcc = wav2mfcc(filename_wav)
+#         mfcc_reshaped = mfcc.reshape(1, 20, 11, 1)
+#         print("labels=", get_labels()[0])
+#         key = np.argmax(model.predict(mfcc_reshaped))
+#         print("predict=", get_labels()[0][key])
+#         os.rename(filename_wav,f'static/user_voice_wav/{uuid.uuid4().hex}.wav')
+#         messages=[]
+#         messages.append(TextSendMessage(text=f'你說的字是[{get_labels()[0][key]}]'))
+#     else:
+#         os.remove(filename_wav)
+#         messages=[]
+#         messages.append(TextSendMessage(text='音檔過長(超過2秒)'))
+#     line_bot_api.reply_message(event.reply_token, messages)
 
 
 def flex(event, user_id):
