@@ -1,8 +1,5 @@
-FROM python:3.8.15
-
+FROM python:3.11.9
 WORKDIR /app
-ADD . /app
-
+COPY . .
 RUN pip install -r requirements.txt
-
-CMD [ "python" , "app.py" ]
+CMD ["python", "app.py"]

@@ -7,7 +7,7 @@ from actions.access_data import *
 import shutil
 
 # Load the model
-hiragana_model = load_model('model/hiragana.h5')
+hiragana_model = load_model('model/hiragana.h5', compile=False)
 
 # Create the array of the right shape to feed into the keras model
 # The 'length' or number of images you can put into the array is
